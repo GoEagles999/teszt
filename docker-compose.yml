@@ -1,0 +1,50 @@
+version: '3'
+
+services:
+  api:
+    build:
+      context: ./b
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
+    ports:
+      - 9001:9001
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./f
+      dockerfile: Dockerfile
+      args:
+        - NODE_ENV=production
+    environment:
+      - PORT=9000
+    ports:
+      - 9000:9000
+
+  sinapi:
+    build:
+      context: ./sin
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+
+  db:
+    image: postgres:alpine
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: teszt
+      POSTGRES_USER: postgres
+      POSTGRES_DB: teszt
+    ports:
+      - 5455:5432
+
+  pgadm:
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: asd@asd.com
+      PGADMIN_DEFAULT_PASSWORD: asd@asd.com
+    ports:
+        - 3333:3333
